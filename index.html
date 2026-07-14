@@ -596,8 +596,8 @@
     <!-- HERO -->
     <section class="hero-section">
       <div class="hero-text">
-        <h1>PDF → JPG Images<br>Watermark-Free</h1>
-        <p class="hero-desc">Upload your PDF, remove watermarks, and export each slide as a lightweight JPG image.</p>
+        <h1>PDF → High Quality JPG<br>Watermark-Free</h1>
+        <p class="hero-desc">Upload your PDF, remove watermarks, and export each slide as a high-quality JPG image.</p>
       </div>
 
       <div class="spotlight-wrapper" id="cardWrapper" style="--x: 50%; --y: 50%;">
@@ -641,17 +641,17 @@
       <!-- EXPORT PANEL -->
       <div class="export-panel" id="exportPanel">
         <div class="export-header">
-          <h3>🖼️ Export to JPG Images</h3>
-          <p>Optimized for extremely small file sizes with good quality</p>
+          <h3>🖼️ High Quality JPG Export</h3>
+          <p>Excellent quality with reasonable file sizes</p>
         </div>
 
         <div class="export-info">
-          <strong>📋 Optimized settings for tiny files:</strong><br>
-          • Format: <strong>JPG</strong> (best compression for photos)<br>
-          • Quality: <strong>70%</strong> (great balance of quality vs size)<br>
-          • Resolution: <strong>1000×563</strong> (web-optimized)<br>
+          <strong>📋 Optimized for quality:</strong><br>
+          • Format: <strong>JPG</strong> (universally compatible)<br>
+          • Quality: <strong>85%</strong> (high quality, minimal artifacts)<br>
+          • Resolution: <strong>1400×788</strong> (crisp, detailed)<br>
           • Numbering: <strong>slide_001.jpg</strong> to slide_NNN.jpg<br>
-          • Typical file size: <strong><span class="size-info">~80-150 KB</span></strong> per slide<br>
+          • Typical file size: <strong><span class="size-info">~300-500 KB</span></strong> per slide<br>
           • All processing is done <strong>locally</strong> in your browser
         </div>
 
@@ -715,9 +715,9 @@
         <div>
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Ultra Lightweight
+            High Quality
           </h3>
-          <p>JPG format with optimized settings creates files that are 10-20x smaller than PNG.</p>
+          <p>85% JPG quality with 1400×788 resolution delivers crisp, professional-looking slides.</p>
         </div>
         <div class="card-visual">
           <svg viewBox="0 0 100 60" fill="none" stroke="#b8c0cc" stroke-width="2" stroke-linecap="round">
@@ -855,11 +855,11 @@
       featherSize: 12
     };
 
-    // Optimized export settings for tiny JPG files
+    // High quality export settings
     const EXPORT_CONFIG = {
-      quality: 0.70,        // 70% quality - great balance
-      maxWidth: 1000,       // Web-optimized width
-      maxHeight: 563,       // Web-optimized height (16:9)
+      quality: 0.85,        // 85% quality - high quality with minimal artifacts
+      maxWidth: 1400,       // Sharp, detailed resolution
+      maxHeight: 788,       // 16:9 aspect ratio
       format: 'jpeg'
     };
 
@@ -887,8 +887,8 @@
         let doc = null;
         const slides = [];
 
-        // Use lower resolution for preview/processing to save memory
-        const renderScale = 1.5;
+        // Higher resolution for better quality processing
+        const renderScale = 2.0;
 
         for (let i = 1; i <= total; i++) {
           log(`🖼️ Processing page ${i}/${total}`);
@@ -899,11 +899,20 @@
           canvas.width = viewport.width;
           canvas.height = viewport.height;
 
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          // Use high quality rendering
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          
+          await page.render({ 
+            canvasContext: ctx, 
+            viewport: viewport,
+            background: 'white'
+          }).promise;
+          
           removeWatermark(ctx, canvas.width, canvas.height);
 
-          // Save for JPG export
-          const imgData = canvas.toDataURL('image/jpeg', 0.80);
+          // Save for JPG export with higher quality
+          const imgData = canvas.toDataURL('image/jpeg', 0.90);
           slides.push({
             index: i,
             data: imgData,
@@ -998,15 +1007,17 @@
       const total = Math.min(pdf.numPages, 12);
       for (let i = 1; i <= total; i++) {
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 0.25 });
+        const viewport = page.getViewport({ scale: 0.3 });
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         await page.render({ canvasContext: ctx, viewport }).promise;
         
         const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.5);
+        img.src = canvas.toDataURL('image/jpeg', 0.7);
         img.className = 'preview-thumb';
         img.title = `Slide ${i}`;
         img.alt = `Slide ${i}`;
@@ -1021,7 +1032,7 @@
       }
     }
 
-    // ———— EXPORT TO JPG (TINY FILES) ————
+    // ———— EXPORT TO HIGH QUALITY JPG ————
     async function exportJPGZip() {
       if (!processedPdfDoc || !currentSlides.length) return;
 
@@ -1037,10 +1048,10 @@
         const folderName = `${originalName}_jpg`;
         const folder = zip.folder(folderName);
 
-        log('📦 Creating optimized JPG archive...', '');
+        log('📦 Creating high quality JPG archive...', '');
         
-        // Convert slides to tiny JPG images
-        const slides = await convertToTinyJPG(currentSlides);
+        // Convert slides to high quality JPG
+        const slides = await convertToHighQualityJPG(currentSlides);
         
         // Calculate total size
         let totalSize = 0;
@@ -1065,11 +1076,11 @@
           totalSlides: slides.length,
           exportDate: new Date().toISOString(),
           format: 'JPG',
-          quality: '70%',
-          resolution: '1000×563 (optimized)',
+          quality: '85%',
+          resolution: '1400×788 (high quality)',
           averageFileSize: `${(avgSize / 1024).toFixed(1)} KB`,
           totalSize: `${(totalSize / 1024 / 1024).toFixed(2)} MB`,
-          description: 'Ultra-lightweight JPG export - optimized for tiny file sizes'
+          description: 'High quality JPG export - optimized for clarity and detail'
         };
         folder.file('metadata.json', JSON.stringify(metadata, null, 2));
 
@@ -1092,6 +1103,7 @@
         // Show size info in log
         log(`📊 Total size: ${(zipBlob.size / 1024 / 1024).toFixed(2)} MB`, '');
         log(`📊 Average: ${(avgSize / 1024).toFixed(1)} KB/slide`, '');
+        log(`📊 Resolution: 1400×788`, '');
         
         setTimeout(() => {
           progress.classList.remove('active');
@@ -1099,7 +1111,7 @@
           btn.disabled = false;
         }, 500);
 
-        log('✅ JPG archive created', 'DONE');
+        log('✅ High quality JPG archive created', 'DONE');
 
       } catch (err) {
         console.error(err);
@@ -1110,7 +1122,7 @@
       }
     }
 
-    async function convertToTinyJPG(slides) {
+    async function convertToHighQualityJPG(slides) {
       const jpgSlides = [];
       const total = slides.length;
       
@@ -1120,27 +1132,27 @@
         img.src = slide.data;
         await new Promise(r => img.onload = r);
         
-        // Create canvas with optimized web resolution
+        // Create canvas with high quality resolution
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Calculate optimal size - max 1000x563 (web-optimized)
+        // Calculate optimal size - 1400x788 (high quality)
         let width = img.width;
         let height = img.height;
         
         const maxWidth = EXPORT_CONFIG.maxWidth;
         const maxHeight = EXPORT_CONFIG.maxHeight;
         
-        // Scale down to web-optimized size while maintaining aspect ratio
+        // Scale to high quality size while maintaining aspect ratio
         if (width > maxWidth || height > maxHeight) {
           const ratio = Math.min(maxWidth / width, maxHeight / height);
           width = Math.round(width * ratio);
           height = Math.round(height * ratio);
         }
         
-        // Make sure we don't go below a minimum size
-        if (width < 600 && height < 338) {
-          // Keep original size if it's already small
+        // Make sure we maintain quality
+        if (width < 1000 && height < 563) {
+          // If original is smaller, keep it at original size
           width = img.width;
           height = img.height;
         }
@@ -1148,12 +1160,12 @@
         canvas.width = width;
         canvas.height = height;
         
-        // Use image smoothing for better quality at lower resolution
+        // Use high quality image rendering
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Export as JPG with 70% quality (great balance)
+        // Export as JPG with 85% quality (high quality)
         const quality = EXPORT_CONFIG.quality;
         const dataUrl = canvas.toDataURL('image/jpeg', quality);
         
