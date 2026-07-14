@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SlideClean Pro · PDF to WebP Converter</title>
+  <title>SlideClean Pro · PDF to JPG Converter</title>
 
   <!-- Core Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
@@ -395,6 +395,16 @@
       color: #1e1e2a;
     }
 
+    .size-info {
+      display: inline-block;
+      background: #eef1f4;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #1e1e2a;
+    }
+
     .progress-bar {
       width: 100%;
       height: 4px;
@@ -586,8 +596,8 @@
     <!-- HERO -->
     <section class="hero-section">
       <div class="hero-text">
-        <h1>PDF → WebP Images<br>Watermark-Free</h1>
-        <p class="hero-desc">Upload your PDF, remove watermarks, and export each slide as a high-quality WebP image.</p>
+        <h1>PDF → JPG Images<br>Watermark-Free</h1>
+        <p class="hero-desc">Upload your PDF, remove watermarks, and export each slide as a lightweight JPG image.</p>
       </div>
 
       <div class="spotlight-wrapper" id="cardWrapper" style="--x: 50%; --y: 50%;">
@@ -621,7 +631,7 @@
             </div>
             <div class="action-buttons">
               <button class="btn btn-primary btn-sm" id="downloadPdfBtn">📄 Download PDF</button>
-              <button class="btn btn-success btn-sm" id="exportWebpBtn">🖼️ Export to WebP</button>
+              <button class="btn btn-success btn-sm" id="exportJpgBtn">🖼️ Export to JPG</button>
               <button class="btn btn-ghost btn-sm" id="resetBtn">↺ Reset</button>
             </div>
           </div>
@@ -631,16 +641,17 @@
       <!-- EXPORT PANEL -->
       <div class="export-panel" id="exportPanel">
         <div class="export-header">
-          <h3>🖼️ Export to WebP Images</h3>
-          <p>Your slides will be exported as high-quality WebP images</p>
+          <h3>🖼️ Export to JPG Images</h3>
+          <p>Optimized for extremely small file sizes with good quality</p>
         </div>
 
         <div class="export-info">
-          <strong>📋 Export settings:</strong><br>
-          • Format: <strong>WebP</strong> (optimized for web)<br>
-          • Quality: <strong>92%</strong> (excellent quality)<br>
-          • Resolution: <strong>HD (1920×1080)</strong><br>
-          • Numbering: <strong>From 1</strong> (slide_001.webp, slide_002.webp, ...)<br>
+          <strong>📋 Optimized settings for tiny files:</strong><br>
+          • Format: <strong>JPG</strong> (best compression for photos)<br>
+          • Quality: <strong>70%</strong> (great balance of quality vs size)<br>
+          • Resolution: <strong>1000×563</strong> (web-optimized)<br>
+          • Numbering: <strong>slide_001.jpg</strong> to slide_NNN.jpg<br>
+          • Typical file size: <strong><span class="size-info">~80-150 KB</span></strong> per slide<br>
           • All processing is done <strong>locally</strong> in your browser
         </div>
 
@@ -704,9 +715,9 @@
         <div>
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            WebP Format
+            Ultra Lightweight
           </h3>
-          <p>Modern WebP format provides superior compression with excellent quality for web use.</p>
+          <p>JPG format with optimized settings creates files that are 10-20x smaller than PNG.</p>
         </div>
         <div class="card-visual">
           <svg viewBox="0 0 100 60" fill="none" stroke="#b8c0cc" stroke-width="2" stroke-linecap="round">
@@ -812,7 +823,7 @@
       document.getElementById('exportPanel').classList.remove('visible');
     });
 
-    document.getElementById('exportWebpBtn').addEventListener('click', (e) => {
+    document.getElementById('exportJpgBtn').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!processedPdfDoc) return;
       document.getElementById('exportPanel').classList.add('visible');
@@ -835,13 +846,21 @@
     });
 
     // ———— EXPORT BUTTON ————
-    document.getElementById('exportZipBtn').addEventListener('click', exportWebPZip);
+    document.getElementById('exportZipBtn').addEventListener('click', exportJPGZip);
 
     // ———— MAIN PROCESSING ————
     const WM_CONFIG = {
       widthRatio: 0.0825, heightRatio: 0.0375,
       marginRightRatio: 0.0025, marginBottomRatio: 0.0027,
       featherSize: 12
+    };
+
+    // Optimized export settings for tiny JPG files
+    const EXPORT_CONFIG = {
+      quality: 0.70,        // 70% quality - great balance
+      maxWidth: 1000,       // Web-optimized width
+      maxHeight: 563,       // Web-optimized height (16:9)
+      format: 'jpeg'
     };
 
     async function start(file) {
@@ -868,10 +887,13 @@
         let doc = null;
         const slides = [];
 
+        // Use lower resolution for preview/processing to save memory
+        const renderScale = 1.5;
+
         for (let i = 1; i <= total; i++) {
           log(`🖼️ Processing page ${i}/${total}`);
           const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 2 });
+          const viewport = page.getViewport({ scale: renderScale });
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           canvas.width = viewport.width;
@@ -880,8 +902,8 @@
           await page.render({ canvasContext: ctx, viewport }).promise;
           removeWatermark(ctx, canvas.width, canvas.height);
 
-          // Save for WebP export
-          const imgData = canvas.toDataURL('image/webp', 0.92);
+          // Save for JPG export
+          const imgData = canvas.toDataURL('image/jpeg', 0.80);
           slides.push({
             index: i,
             data: imgData,
@@ -898,7 +920,7 @@
           } else {
             doc.addPage([viewport.width, viewport.height], viewport.width > viewport.height ? 'l' : 'p');
           }
-          doc.addImage(imgData, 'WEBP', 0, 0, viewport.width, viewport.height);
+          doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
         }
 
         log('📦 Packing PDF', 'DONE');
@@ -976,7 +998,7 @@
       const total = Math.min(pdf.numPages, 12);
       for (let i = 1; i <= total; i++) {
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 0.3 });
+        const viewport = page.getViewport({ scale: 0.25 });
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = viewport.width;
@@ -984,7 +1006,7 @@
         await page.render({ canvasContext: ctx, viewport }).promise;
         
         const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/webp', 0.8);
+        img.src = canvas.toDataURL('image/jpeg', 0.5);
         img.className = 'preview-thumb';
         img.title = `Slide ${i}`;
         img.alt = `Slide ${i}`;
@@ -999,8 +1021,8 @@
       }
     }
 
-    // ———— EXPORT TO WEBP ————
-    async function exportWebPZip() {
+    // ———— EXPORT TO JPG (TINY FILES) ————
+    async function exportJPGZip() {
       if (!processedPdfDoc || !currentSlides.length) return;
 
       const btn = document.getElementById('exportZipBtn');
@@ -1012,33 +1034,42 @@
       
       try {
         const zip = new JSZip();
-        const folderName = `${originalName}_webp`;
+        const folderName = `${originalName}_jpg`;
         const folder = zip.folder(folderName);
 
-        log('📦 Creating WebP archive...', '');
+        log('📦 Creating optimized JPG archive...', '');
         
-        // Convert slides to WebP with optimal settings
-        const slides = await convertToWebP(currentSlides);
+        // Convert slides to tiny JPG images
+        const slides = await convertToTinyJPG(currentSlides);
+        
+        // Calculate total size
+        let totalSize = 0;
+        for (const slide of slides) {
+          totalSize += slide.blob.size;
+        }
+        const avgSize = totalSize / slides.length;
         
         // Add images
         for (let i = 0; i < slides.length; i++) {
           const slide = slides[i];
           const num = String(i + 1).padStart(3, '0');
-          const filename = `slide_${num}.webp`;
+          const filename = `slide_${num}.jpg`;
           folder.file(filename, slide.blob);
           
           fill.style.width = `${((i + 1) / slides.length) * 70}%`;
         }
 
-        // Add metadata
+        // Add metadata with size info
         const metadata = {
           title: originalName,
           totalSlides: slides.length,
           exportDate: new Date().toISOString(),
-          format: 'WebP',
-          quality: '92%',
-          resolution: 'HD (1920×1080)',
-          description: 'Exported with SlideClean Pro'
+          format: 'JPG',
+          quality: '70%',
+          resolution: '1000×563 (optimized)',
+          averageFileSize: `${(avgSize / 1024).toFixed(1)} KB`,
+          totalSize: `${(totalSize / 1024 / 1024).toFixed(2)} MB`,
+          description: 'Ultra-lightweight JPG export - optimized for tiny file sizes'
         };
         folder.file('metadata.json', JSON.stringify(metadata, null, 2));
 
@@ -1056,7 +1087,11 @@
         fill.style.width = '100%';
         
         // Download
-        saveAs(zipBlob, `${originalName}_webp_images.zip`);
+        saveAs(zipBlob, `${originalName}_jpg_images.zip`);
+        
+        // Show size info in log
+        log(`📊 Total size: ${(zipBlob.size / 1024 / 1024).toFixed(2)} MB`, '');
+        log(`📊 Average: ${(avgSize / 1024).toFixed(1)} KB/slide`, '');
         
         setTimeout(() => {
           progress.classList.remove('active');
@@ -1064,19 +1099,19 @@
           btn.disabled = false;
         }, 500);
 
-        log('✅ WebP archive created', 'DONE');
+        log('✅ JPG archive created', 'DONE');
 
       } catch (err) {
         console.error(err);
-        alert('Error creating WebP archive: ' + err.message);
+        alert('Error creating JPG archive: ' + err.message);
         progress.classList.remove('active');
         fill.style.width = '0%';
         btn.disabled = false;
       }
     }
 
-    async function convertToWebP(slides) {
-      const webpSlides = [];
+    async function convertToTinyJPG(slides) {
+      const jpgSlides = [];
       const total = slides.length;
       
       for (let i = 0; i < total; i++) {
@@ -1085,44 +1120,58 @@
         img.src = slide.data;
         await new Promise(r => img.onload = r);
         
-        // Create canvas for HD resolution (1920x1080)
+        // Create canvas with optimized web resolution
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Calculate optimal size maintaining aspect ratio
-        const targetWidth = 1920;
-        const targetHeight = 1080;
+        // Calculate optimal size - max 1000x563 (web-optimized)
         let width = img.width;
         let height = img.height;
         
-        // Scale to fit HD while maintaining aspect ratio
-        if (width > targetWidth || height > targetHeight) {
-          const ratio = Math.min(targetWidth / width, targetHeight / height);
+        const maxWidth = EXPORT_CONFIG.maxWidth;
+        const maxHeight = EXPORT_CONFIG.maxHeight;
+        
+        // Scale down to web-optimized size while maintaining aspect ratio
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
           width = Math.round(width * ratio);
           height = Math.round(height * ratio);
         }
         
+        // Make sure we don't go below a minimum size
+        if (width < 600 && height < 338) {
+          // Keep original size if it's already small
+          width = img.width;
+          height = img.height;
+        }
+        
         canvas.width = width;
         canvas.height = height;
+        
+        // Use image smoothing for better quality at lower resolution
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Export as WebP with 92% quality
-        const dataUrl = canvas.toDataURL('image/webp', 0.92);
+        // Export as JPG with 70% quality (great balance)
+        const quality = EXPORT_CONFIG.quality;
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
         
         // Convert dataURL to Blob
         const response = await fetch(dataUrl);
         const blob = await response.blob();
         
-        webpSlides.push({
+        jpgSlides.push({
           index: i + 1,
           data: dataUrl,
           blob: blob,
           width: width,
-          height: height
+          height: height,
+          sizeKB: (blob.size / 1024).toFixed(1)
         });
       }
       
-      return webpSlides;
+      return jpgSlides;
     }
 
     log('🟢 Ready for processing', 'OK');
