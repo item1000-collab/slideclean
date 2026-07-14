@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SlideClean Pro · PDF to HTML Gallery</title>
+  <title>SlideClean Pro · PDF to WebP Converter</title>
 
   <!-- Core Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
@@ -381,102 +381,18 @@
       color: #6e6e82;
     }
 
-    .export-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .option-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .option-group label {
-      font-size: 12px;
-      font-weight: 500;
-      color: #4a4a5a;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .btn-option {
-      padding: 4px 12px;
-      font-size: 11px;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
-      background: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-      color: #4a4a5a;
-    }
-
-    .btn-option:hover {
+    .export-info {
       background: #f5f7fa;
-      border-color: #b8c0cc;
-    }
-
-    .btn-option.active {
-      background: #1e1e2a;
-      color: white;
-      border-color: #1e1e2a;
-    }
-
-    select {
-      padding: 6px 10px;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: #1e1e2a;
-      background: white;
-      cursor: pointer;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: #1e1e2a;
-    }
-
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 12px;
-    }
-
-    .checkbox-group label {
-      font-size: 12px;
-      font-weight: 400;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
       color: #4a4a5a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-transform: none;
-      letter-spacing: 0;
-      cursor: pointer;
+      border: 1px solid #eef1f4;
     }
 
-    .checkbox-group input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .export-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 4px;
+    .export-info strong {
+      color: #1e1e2a;
     }
 
     .progress-bar {
@@ -632,7 +548,6 @@
       .grid-section { grid-template-columns: 1fr; }
       .container { padding: 32px 16px; gap: 48px; }
       .footer-content { flex-direction: column; align-items: flex-start; }
-      .export-options { grid-template-columns: 1fr; }
       .action-buttons { flex-direction: column; align-items: center; }
       .file-card { width: 100%; }
     }
@@ -671,8 +586,8 @@
     <!-- HERO -->
     <section class="hero-section">
       <div class="hero-text">
-        <h1>PDF → HTML Gallery<br>Watermark-Free</h1>
-        <p class="hero-desc">Upload your PDF, remove watermarks, and get a ready-to-publish HTML gallery with numbered slides.</p>
+        <h1>PDF → WebP Images<br>Watermark-Free</h1>
+        <p class="hero-desc">Upload your PDF, remove watermarks, and export each slide as a high-quality WebP image.</p>
       </div>
 
       <div class="spotlight-wrapper" id="cardWrapper" style="--x: 50%; --y: 50%;">
@@ -706,7 +621,7 @@
             </div>
             <div class="action-buttons">
               <button class="btn btn-primary btn-sm" id="downloadPdfBtn">📄 Download PDF</button>
-              <button class="btn btn-success btn-sm" id="exportHtmlBtn">🌐 Export to HTML</button>
+              <button class="btn btn-success btn-sm" id="exportWebpBtn">🖼️ Export to WebP</button>
               <button class="btn btn-ghost btn-sm" id="resetBtn">↺ Reset</button>
             </div>
           </div>
@@ -716,68 +631,17 @@
       <!-- EXPORT PANEL -->
       <div class="export-panel" id="exportPanel">
         <div class="export-header">
-          <h3>📤 Export to HTML Gallery</h3>
-          <p>Configure settings before downloading</p>
+          <h3>🖼️ Export to WebP Images</h3>
+          <p>Your slides will be exported as high-quality WebP images</p>
         </div>
 
-        <div class="export-options">
-          <div class="option-group">
-            <label>Image Format</label>
-            <div class="btn-group">
-              <button class="btn-option active" data-format="png">PNG</button>
-              <button class="btn-option" data-format="jpeg">JPEG</button>
-              <button class="btn-option" data-format="webp">WEBP</button>
-            </div>
-          </div>
-
-          <div class="option-group">
-            <label>Quality</label>
-            <select id="qualitySelect">
-              <option value="0.6">60% (Economy)</option>
-              <option value="0.8" selected>80% (Good)</option>
-              <option value="0.92">92% (Excellent)</option>
-              <option value="1.0">100% (Maximum)</option>
-            </select>
-          </div>
-
-          <div class="option-group">
-            <label>Resolution</label>
-            <select id="resolutionSelect">
-              <option value="web">🌐 Web (1200×675)</option>
-              <option value="hd" selected>📺 HD (1920×1080)</option>
-              <option value="instagram">📱 Instagram (1080×1080)</option>
-              <option value="linkedin">💼 LinkedIn (1200×627)</option>
-              <option value="twitter">🐦 Twitter (1600×900)</option>
-            </select>
-          </div>
-
-          <div class="option-group">
-            <label>Numbering</label>
-            <div class="btn-group">
-              <button class="btn-option active" data-numbering="start">From 1</button>
-              <button class="btn-option" data-numbering="zero">From 0</button>
-              <button class="btn-option" data-numbering="roman">Roman</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="checkbox-group">
-          <label>
-            <input type="checkbox" id="includePreview" checked>
-            Include cover (preview)
-          </label>
-          <label>
-            <input type="checkbox" id="includeMetadata" checked>
-            Include metadata
-          </label>
-          <label>
-            <input type="checkbox" id="optimizeImages" checked>
-            Optimize for web
-          </label>
-          <label>
-            <input type="checkbox" id="showThumbnails">
-            Show thumbnails in gallery
-          </label>
+        <div class="export-info">
+          <strong>📋 Export settings:</strong><br>
+          • Format: <strong>WebP</strong> (optimized for web)<br>
+          • Quality: <strong>92%</strong> (excellent quality)<br>
+          • Resolution: <strong>HD (1920×1080)</strong><br>
+          • Numbering: <strong>From 1</strong> (slide_001.webp, slide_002.webp, ...)<br>
+          • All processing is done <strong>locally</strong> in your browser
         </div>
 
         <div class="progress-bar" id="progressBar">
@@ -786,10 +650,7 @@
 
         <div class="export-actions">
           <button class="btn btn-success" id="exportZipBtn">
-            📦 Download HTML + Images (ZIP)
-          </button>
-          <button class="btn btn-primary" id="exportHtmlOnlyBtn">
-            📄 HTML Only
+            📦 Download All Slides (ZIP)
           </button>
           <button class="btn btn-ghost" id="closeExportBtn">
             ✕ Close
@@ -843,9 +704,9 @@
         <div>
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            Ready to Publish
+            WebP Format
           </h3>
-          <p>Create a complete HTML gallery with numbered slides for websites and social media.</p>
+          <p>Modern WebP format provides superior compression with excellent quality for web use.</p>
         </div>
         <div class="card-visual">
           <svg viewBox="0 0 100 60" fill="none" stroke="#b8c0cc" stroke-width="2" stroke-linecap="round">
@@ -951,7 +812,7 @@
       document.getElementById('exportPanel').classList.remove('visible');
     });
 
-    document.getElementById('exportHtmlBtn').addEventListener('click', (e) => {
+    document.getElementById('exportWebpBtn').addEventListener('click', (e) => {
       e.stopPropagation();
       if (!processedPdfDoc) return;
       document.getElementById('exportPanel').classList.add('visible');
@@ -973,24 +834,8 @@
       URL.revokeObjectURL(url);
     });
 
-    // ———— EXPORT BUTTONS ————
-    document.getElementById('exportZipBtn').addEventListener('click', exportZip);
-    document.getElementById('exportHtmlOnlyBtn').addEventListener('click', exportHtmlOnly);
-
-    // ———— EXPORT OPTIONS ————
-    document.querySelectorAll('.btn-option[data-format]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.parentElement.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('.btn-option[data-numbering]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.parentElement.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
+    // ———— EXPORT BUTTON ————
+    document.getElementById('exportZipBtn').addEventListener('click', exportWebPZip);
 
     // ———— MAIN PROCESSING ————
     const WM_CONFIG = {
@@ -1035,8 +880,8 @@
           await page.render({ canvasContext: ctx, viewport }).promise;
           removeWatermark(ctx, canvas.width, canvas.height);
 
-          // Save for HTML export
-          const imgData = canvas.toDataURL('image/jpeg', 0.9);
+          // Save for WebP export
+          const imgData = canvas.toDataURL('image/webp', 0.92);
           slides.push({
             index: i,
             data: imgData,
@@ -1053,7 +898,7 @@
           } else {
             doc.addPage([viewport.width, viewport.height], viewport.width > viewport.height ? 'l' : 'p');
           }
-          doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
+          doc.addImage(imgData, 'WEBP', 0, 0, viewport.width, viewport.height);
         }
 
         log('📦 Packing PDF', 'DONE');
@@ -1139,7 +984,7 @@
         await page.render({ canvasContext: ctx, viewport }).promise;
         
         const img = document.createElement('img');
-        img.src = canvas.toDataURL('image/jpeg', 0.7);
+        img.src = canvas.toDataURL('image/webp', 0.8);
         img.className = 'preview-thumb';
         img.title = `Slide ${i}`;
         img.alt = `Slide ${i}`;
@@ -1154,8 +999,8 @@
       }
     }
 
-    // ———— EXPORT FUNCTIONS ————
-    async function exportZip() {
+    // ———— EXPORT TO WEBP ————
+    async function exportWebPZip() {
       if (!processedPdfDoc || !currentSlides.length) return;
 
       const btn = document.getElementById('exportZipBtn');
@@ -1166,46 +1011,38 @@
       progress.classList.add('active');
       
       try {
-        const options = getExportOptions();
         const zip = new JSZip();
-        const folderName = `${originalName}_slides`;
+        const folderName = `${originalName}_webp`;
         const folder = zip.folder(folderName);
 
-        log('📦 Creating archive...', '');
+        log('📦 Creating WebP archive...', '');
         
-        // Convert slides to images
-        const slides = await convertSlides(options);
+        // Convert slides to WebP with optimal settings
+        const slides = await convertToWebP(currentSlides);
         
         // Add images
         for (let i = 0; i < slides.length; i++) {
           const slide = slides[i];
-          const ext = options.format === 'jpeg' ? 'jpg' : options.format;
-          const num = formatNumber(i + 1, options.numbering);
-          const filename = `slide_${num}.${ext}`;
+          const num = String(i + 1).padStart(3, '0');
+          const filename = `slide_${num}.webp`;
           folder.file(filename, slide.blob);
           
-          fill.style.width = `${((i + 1) / slides.length) * 50}%`;
+          fill.style.width = `${((i + 1) / slides.length) * 70}%`;
         }
-
-        // Generate HTML
-        const html = generateHTML(slides, options);
-        folder.file('index.html', html);
 
         // Add metadata
-        if (options.includeMetadata) {
-          const metadata = {
-            title: originalName,
-            totalSlides: slides.length,
-            exportDate: new Date().toISOString(),
-            format: options.format,
-            quality: options.quality,
-            resolution: options.resolution,
-            numbering: options.numbering
-          };
-          folder.file('metadata.json', JSON.stringify(metadata, null, 2));
-        }
+        const metadata = {
+          title: originalName,
+          totalSlides: slides.length,
+          exportDate: new Date().toISOString(),
+          format: 'WebP',
+          quality: '92%',
+          resolution: 'HD (1920×1080)',
+          description: 'Exported with SlideClean Pro'
+        };
+        folder.file('metadata.json', JSON.stringify(metadata, null, 2));
 
-        fill.style.width = '80%';
+        fill.style.width = '85%';
 
         // Generate ZIP
         const zipBlob = await zip.generateAsync({ 
@@ -1213,13 +1050,13 @@
           compression: 'DEFLATE',
           compressionOptions: { level: 6 }
         }, (metadata) => {
-          fill.style.width = `${80 + (metadata.percent / 5)}%`;
+          fill.style.width = `${85 + (metadata.percent / 15)}%`;
         });
 
         fill.style.width = '100%';
         
         // Download
-        saveAs(zipBlob, `${originalName}_gallery.zip`);
+        saveAs(zipBlob, `${originalName}_webp_images.zip`);
         
         setTimeout(() => {
           progress.classList.remove('active');
@@ -1227,322 +1064,66 @@
           btn.disabled = false;
         }, 500);
 
-        log('✅ Archive created', 'DONE');
+        log('✅ WebP archive created', 'DONE');
 
       } catch (err) {
         console.error(err);
-        alert('Error creating archive: ' + err.message);
+        alert('Error creating WebP archive: ' + err.message);
         progress.classList.remove('active');
         fill.style.width = '0%';
         btn.disabled = false;
       }
     }
 
-    async function exportHtmlOnly() {
-      if (!processedPdfDoc || !currentSlides.length) return;
-
-      try {
-        const options = getExportOptions();
-        const slides = await convertSlides(options);
-        const html = generateHTML(slides, options);
-        
-        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-        saveAs(blob, `${originalName}_gallery.html`);
-        
-        log('✅ HTML created', 'DONE');
-      } catch (err) {
-        console.error(err);
-        alert('Error creating HTML: ' + err.message);
-      }
-    }
-
-    async function convertSlides(options) {
-      const slides = [];
-      const total = currentSlides.length;
+    async function convertToWebP(slides) {
+      const webpSlides = [];
+      const total = slides.length;
       
       for (let i = 0; i < total; i++) {
-        const slide = currentSlides[i];
+        const slide = slides[i];
         const img = new Image();
         img.src = slide.data;
         await new Promise(r => img.onload = r);
         
-        // Optimize size
+        // Create canvas for HD resolution (1920x1080)
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
+        // Calculate optimal size maintaining aspect ratio
+        const targetWidth = 1920;
+        const targetHeight = 1080;
         let width = img.width;
         let height = img.height;
         
-        const maxDim = getResolution(options.resolution);
-        if (width > maxDim.width) {
-          const ratio = maxDim.width / width;
-          width = maxDim.width;
-          height = Math.round(height * ratio);
-        }
-        if (height > maxDim.height) {
-          const ratio = maxDim.height / height;
-          height = maxDim.height;
+        // Scale to fit HD while maintaining aspect ratio
+        if (width > targetWidth || height > targetHeight) {
+          const ratio = Math.min(targetWidth / width, targetHeight / height);
           width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
         }
         
         canvas.width = width;
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
         
-        const format = options.format === 'jpeg' ? 'jpeg' : options.format;
-        const quality = parseFloat(options.quality);
-        const dataUrl = canvas.toDataURL(`image/${format}`, quality);
+        // Export as WebP with 92% quality
+        const dataUrl = canvas.toDataURL('image/webp', 0.92);
         
         // Convert dataURL to Blob
         const response = await fetch(dataUrl);
         const blob = await response.blob();
         
-        slides.push({
+        webpSlides.push({
           index: i + 1,
           data: dataUrl,
           blob: blob,
           width: width,
-          height: height,
-          filename: `slide_${formatNumber(i + 1, options.numbering)}`
+          height: height
         });
       }
       
-      return slides;
+      return webpSlides;
     }
-
-    function generateHTML(slides, options) {
-      const showThumbs = document.getElementById('showThumbnails').checked;
-      const includePreview = document.getElementById('includePreview').checked;
-      
-      return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${originalName} - Presentation</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #f5f7fa;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #1e1e2a;
-      padding: 20px;
-    }
-    .gallery-container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .gallery-header {
-      text-align: center;
-      padding: 40px 0 30px;
-    }
-    .gallery-header h1 {
-      font-size: 32px;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-    .gallery-header p {
-      color: #6e6e82;
-      font-size: 16px;
-    }
-    .slide-wrapper {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      margin-bottom: 30px;
-      overflow: hidden;
-      border: 1px solid #eef1f4;
-    }
-    .slide-wrapper img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .slide-info {
-      padding: 12px 20px;
-      background: #fafcfc;
-      border-top: 1px solid #eef1f4;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      color: #4a4a5a;
-    }
-    .slide-number {
-      font-weight: 500;
-      color: #1e1e2a;
-    }
-    ${showThumbs ? `
-    .thumbnails {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 8px;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      border: 1px solid #eef1f4;
-      margin-top: 20px;
-    }
-    .thumbnails img {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      border-radius: 6px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.2s;
-    }
-    .thumbnails img:hover {
-      border-color: #1e1e2a;
-      transform: scale(1.02);
-    }
-    ` : ''}
-    .navigation {
-      position: sticky;
-      bottom: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      padding: 12px;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 30px;
-      border: 1px solid #d0d7de;
-      max-width: 400px;
-      margin: 0 auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-    .navigation button {
-      padding: 8px 16px;
-      border: none;
-      background: #1e1e2a;
-      color: white;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-    .navigation button:hover { background: #2e2e42; }
-    .navigation button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .navigation span {
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      color: #4a4a5a;
-    }
-    @media (max-width: 768px) {
-      .gallery-header h1 { font-size: 24px; }
-      .slide-info { flex-direction: column; gap: 4px; text-align: center; }
-    }
-  </style>
-</head>
-<body>
-  <div class="gallery-container">
-    <div class="gallery-header">
-      <h1>${originalName}</h1>
-      <p>${slides.length} slides • ${new Date().toLocaleDateString()}</p>
-    </div>
-
-    <div id="slidesContainer">
-      ${slides.map((slide, index) => `
-        <div class="slide-wrapper" data-slide="${index + 1}">
-          <img src="${slide.data}" alt="Slide ${index + 1}" loading="lazy">
-          <div class="slide-info">
-            <span class="slide-number">Slide ${index + 1} of ${slides.length}</span>
-            <span style="color:#6e6e82;">${slide.width}×${slide.height}</span>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-
-    ${includePreview ? `
-    <div style="text-align:center;padding:20px;color:#6e6e82;font-size:14px;border-top:1px solid #eef1f4;margin-top:20px;">
-      Created with SlideClean Pro
-    </div>
-    ` : ''}
-
-    <div class="navigation">
-      <button onclick="changeSlide(-1)" id="prevBtn">← Previous</button>
-      <span id="counter">1 / ${slides.length}</span>
-      <button onclick="changeSlide(1)" id="nextBtn">Next →</button>
-    </div>
-  </div>
-
-  <script>
-    let currentSlide = 1;
-    const totalSlides = ${slides.length};
-
-    function updateSlide(index) {
-      currentSlide = Math.max(1, Math.min(index, totalSlides));
-      document.getElementById('counter').textContent = currentSlide + ' / ' + totalSlides;
-      document.getElementById('prevBtn').disabled = currentSlide === 1;
-      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
-      
-      const slide = document.querySelector('[data-slide="' + currentSlide + '"]');
-      if (slide) slide.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function changeSlide(delta) {
-      updateSlide(currentSlide + delta);
-    }
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') changeSlide(-1);
-      if (e.key === 'ArrowRight') changeSlide(1);
-    });
-
-    updateSlide(1);
-  <\/script>
-</body>
-</html>`;
-    }
-
-    function getExportOptions() {
-      const format = document.querySelector('.btn-option[data-format].active')?.dataset.format || 'png';
-      const numbering = document.querySelector('.btn-option[data-numbering].active')?.dataset.numbering || 'start';
-      const resolution = document.getElementById('resolutionSelect').value;
-      const quality = document.getElementById('qualitySelect').value;
-      const includeMetadata = document.getElementById('includeMetadata').checked;
-      
-      return { format, numbering, resolution, quality, includeMetadata };
-    }
-
-    function getResolution(type) {
-      const resolutions = {
-        web: { width: 1200, height: 675 },
-        hd: { width: 1920, height: 1080 },
-        instagram: { width: 1080, height: 1080 },
-        linkedin: { width: 1200, height: 627 },
-        twitter: { width: 1600, height: 900 }
-      };
-      return resolutions[type] || resolutions.hd;
-    }
-
-    function formatNumber(num, style) {
-      if (style === 'roman') {
-        const roman = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-          'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
-        return roman[num] || num;
-      }
-      if (style === 'zero') {
-        return String(num - 1).padStart(3, '0');
-      }
-      return String(num).padStart(3, '0');
-    }
-
-    // ———— INIT OPTION BUTTONS ————
-    document.querySelectorAll('.btn-option').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const parent = this.parentElement;
-        parent.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
 
     log('🟢 Ready for processing', 'OK');
   </script>
